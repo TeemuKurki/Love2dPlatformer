@@ -7,7 +7,7 @@ local Entities = {
     entityList = {}
 }
 
-function Entities:list(world)
+function Entities:enter(world)
     self:clear()
     self.world = world
 end

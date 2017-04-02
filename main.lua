@@ -1,18 +1,18 @@
 --Hae gamestate hump kirjastota
-Gamestate = require("libs.hump.gamestate")
+Gamestate = require 'libs.hump.gamestate'
 
 --Hae tarvittavat tilat
-local mainMenu = require("gamestates.mainmenu")
-local gameLevel1 = require("gamestates.gameLevel1")
-local pause = require("gamestates.pause")
+local mainMenu = require 'gamestates.mainmenu'
+local gameLevel1 = require 'gamestates.gameLevel1'
+local pause = require 'gamestates.pause'
 
 function love.load()
     Gamestate.registerEvents()
     Gamestate.switch(gameLevel1)
 end
 
-function lova.keypressed(key)
-    if key = "escape" then
+function love.keypressed(key)
+    if key == "escape" then
         love.event.push("quit")
     end
 end

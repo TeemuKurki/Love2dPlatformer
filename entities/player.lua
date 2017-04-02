@@ -1,41 +1,42 @@
-local Class = require("libs.hump.class")
-local Entity = require("entities.Entity")
+local Class = require 'libs.hump.class'
+local Entity = require 'entities.Entity'
 
-local Player = Class{
-    --Player luokka perii Entity luokan
-    _includes = Entity
+local player = Class{
+    --player luokka perii Entity luokan
+    --Pitää olla kaksi alaviivaa
+    __includes = Entity
 }
 
-function Player:init(world, x, y)
+function player:init(world, x, y)
     self.img = love.graphics.newImage("/assets/character_block.png")
 
-    Entity:init(self, world, x, y, self.img:getWidth(), self.img:getHeigth())
+    Entity.init(self, world, x, y, self.img:getWidth(), self.img:getHeight())
 
-    --Uniikit attribuutit Player objectille
+    --Uniikit attribuutit player objectille
     -- Nämä ensimäiset attribuutit ovat tärketä jotta fysiikka toimii kuten sen pitää
-    xVelocity = 0,
-    yVelocity = 0, -- x,y tämän hetkiset nopeudet
-
-    acc = 100, --Pelaajan kiihtyvyys
-    maxSpeed = 600, --huippunopeus
-    friction = 20, --kitkan määrä
-    gravity = 80, --Painovoiman määrä
+    self.xVelocity = 0
+    self.yVelocity = 0 -- x,y tämän hetkiset nopeudet
+    self.acc = 100 --Pelaajan kiihtyvyys
+    self.maxSpeed = 600 --huippunopeus
+    self.friction = 20 --kitkan määrä
+    self.gravity = 80 --Painovoiman määrä
 
     --Nämä arvot ovat hyppyjä varten
-    isJumping = false, --Hypätäänkö tällähetkellä
-    isGrounded = false, --Ollaanko maassa tällähetkellä
-    hasReachedMax = false, --Ollaanko niin korkella kuin pystyy
-    jumpAcc = 500, --Hypyn kiihtyvyys
-    jumpMaxSpeed = 11, --Hypyn huppunopeus
+    self.isJumping = false --Hypätäänkö tällähetkellä
+    self.isGrounded = false --Ollaanko maassa tällähetkellä
+    self.hasReachedMax = false --Ollaanko niin korkella kuin pystyy
+    self.jumpAcc = 500 --Hypyn kiihtyvyys
+    self.jumpMaxSpeed = 11 --Hypyn huppunopeus
 
     --self.getRect() palauttaa x, y, w, h
-    self.world:add(self, self.getRect())
+    self.world:add(self, self:getRect())
 end
 
-function Player:collisionFilter(other)
+function player:collisionFilter(other)
     local x, y, w, h = self.world:getRect(other)
-    local playerBottom = self.y, self.h
-    local otherBottom = y, h
+    -- y + h = olion alin kohta
+    local playerBottom = self.y + self.h
+    local otherBottom = y + h
 
     --Jos pelaajan pohja on korkeammalla (pienempi luku) kuin alustan me palautamma "slide"
     --"slide" on collision tyyppi joka liuttaa pelaaja törmäyksen jälkeen kuten esim super mariossa 
@@ -44,7 +45,7 @@ function Player:collisionFilter(other)
     end
 end
 
-function Player:update(dt)
+function player:update(dt)
     local prevX, prevY = self.x, self.y
 
     --Aseta kitkan
@@ -96,8 +97,8 @@ function Player:update(dt)
     end 
 end
 
-function Player:draw()
+function player:draw()
     love.graphics.draw(self.img, self.x, self.y)
 end
 
-return Player
+return player

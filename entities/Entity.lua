@@ -1,5 +1,5 @@
 -- Esittää yhtä renderöitävää objectia
-local Class = require("libs.hump.class")
+local Class = require 'libs.hump.class'
 
 local Entity = Class{}
 
