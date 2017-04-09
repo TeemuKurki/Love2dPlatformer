@@ -1,7 +1,8 @@
 local Class = require 'libs.hump.class'
 local Entity = require 'entities.Entity'
 
-local player = Class{
+-- Muutettu julkiseksi jotta keyreleased callback toimisi
+player = Class{
     --player luokka perii Entity luokan
     --Pitää olla kaksi alaviivaa
     __includes = Entity
@@ -28,6 +29,8 @@ function player:init(world, x, y)
     self.jumpAcc = 500 --Hypyn kiihtyvyys
     self.jumpMaxSpeed = 11 --Hypyn huppunopeus
 
+    self.jumpRelease = false
+
     --self.getRect() palauttaa x, y, w, h
     self.world:add(self, self:getRect())
 end
@@ -45,7 +48,16 @@ function player:collisionFilter(other)
     end
 end
 
+function love:keyreleased(key)
+    if key == "up" then
+        player.jumpRelease = true
+    end
+end
+
 function player:update(dt)
+
+    print(self.jumpRelease)
+
     local prevX, prevY = self.x, self.y
 
     --Aseta kitkan
@@ -66,7 +78,7 @@ function player:update(dt)
 
     --hyppy
     if love.keyboard.isDown("up", "w") then
-        if -self.yVelocity < self.jumpMaxSpeed and not self.hasReachedMax then
+        if -self.yVelocity < self.jumpMaxSpeed and not self.hasReachedMax and not self.jumpRelease then
             self.yVelocity = self.yVelocity - self.jumpAcc * dt
         elseif math.abs(self.yVelocity) > self.jumpMaxSpeed then
             self.hasReachedMax = true
@@ -87,10 +99,11 @@ function player:update(dt)
 
     --Käydään kaikki törmäykset läpi ja tällähetkellä vain annetaan lupa hypätä uudestaan
     for i, coll in ipairs(collisions) do 
-        if coll.touch.y > goalY then
+        if coll.touch.y >= goalY then
             self.hasReachedMax = true
             self.isGrounded = false
         elseif coll.normal.y < 0 then
+            self.jumpRelease = false
             self.hasReachedMax = false
             self.isGrounded = true
         end
