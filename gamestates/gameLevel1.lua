@@ -49,6 +49,11 @@ function gameLevel1:update(dt)
     camera:lockY( 200 )
     camera:move(dx/2, dy/2)
     Entities:update(dt)
+
+    --Jos pelaaja tippuu liian alas alustetaan ja käynnistetään taso uudestaan
+    if player.y > 700 then
+        gameLevel1:enter()   
+    end
 end
 
 function gameLevel1:draw()

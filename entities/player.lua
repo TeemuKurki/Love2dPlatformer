@@ -55,9 +55,6 @@ function love:keyreleased(key)
 end
 
 function player:update(dt)
-
-    print(self.jumpRelease)
-
     local prevX, prevY = self.x, self.y
 
     --Aseta kitkan
@@ -107,7 +104,7 @@ function player:update(dt)
             self.hasReachedMax = false
             self.isGrounded = true
         end
-    end 
+    end
 end
 
 function player:draw()
